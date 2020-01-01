@@ -1,0 +1,9 @@
+<h3>{{viewtitle}}</h3>
+<h3><a href="/users">all Users</a></h3>
+<form action="/users/add" method="post">
+<input type="hidden" value="{{data._id}}" name="userid">
+    Email<input type="text" name="email" value="{{data.email}}" >
+    name<input type="text" name="name" value="{{data.age}}" >
+    Mobile No<input type="number" name="mobileno" value="{{data.name}}" >
+    <input type="submit" name="submit" value="submit">
+</form>

@@ -1,0 +1,20 @@
+<h3><a href="/emp">Add new</a></h3>
+<table class="table table-striped">
+   <thead>
+       <tr>
+       <th>name</th>
+       <th>age</th>
+       <th>email</th>
+       <th>edit</th>
+       <th>delete</th></tr>
+   </thead>
+   <tbody>
+       {{#each list}}<tr>
+       <td>{{this.name}}</td>
+       <td>{{this.age}}</td>
+       <td>{{this.email}}</td>
+       <td><a href="/emp/{{this._id}}">edit</a></td>
+      <td><a href="/emp/delete/{{this._id}}" onclick="return confirm('are you sure????')">delete</a></td></tr>
+       {{/each}}
+   </tbody>
+</table>
