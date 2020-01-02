@@ -101,4 +101,14 @@ router.post('/addtask',(req,res)=>{
         res.redirect('/users')
     })
 })
+
+router.post('/findusers',(req,res)=>{
+    if (!req.isAuthenticated()) { 
+        res.redirect('/auth/login');
+      }
+      usermodel.findUsersByAdmin(req.app.locals.db,req.session.passport.user,req.body.search).then(function(result){
+          res.end(JSON.stringify(result));
+    })
+})
+
 module.exports=router;

@@ -23,13 +23,21 @@ function findUser(db,userid) {
     });
 }
 
-function findUsersByAdmin(db,userid) {    
-    return new Promise(function(resolve, reject) {
-    db.collection('users').find({'adminid':userid}).toArray(function(err, result) {
-        
-        resolve(result);        
+function findUsersByAdmin(db,userid,search) {
+    if(typeof search == "string" ){
+        return new Promise(function(resolve, reject) {
+            db.collection('users').find({'adminid':userid,'name':search}).toArray(function(err, result) {
+                resolve(result);        
+                });
+            });
+    }else{   
+        return new Promise(function(resolve, reject) {
+        db.collection('users').find({'adminid':userid}).toArray(function(err, result) {
+           
+            resolve(result);        
+            });
         });
-    });
+    }
 }
 
 function updateUser(db,userid,data) {    
