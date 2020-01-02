@@ -1,7 +1,6 @@
-<h2>Register a new user</h2>
-
-{{!-- {{> messages }} --}}
-
+<div class="col-md-6 col-md-offset-3"> 
+  <h2>Register a new user</h2>
+  {{> messages }}
 <form action="/auth/register" method="POST">
   <div class="form-group">
     <label for="username">Username:</label>
@@ -15,3 +14,4 @@
 </form>
 
 <p>Or <a href="/auth/login">Login</a> if you already have an account.</p>
+</div>

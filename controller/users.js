@@ -1,13 +1,17 @@
 var express=require('express');
 var router=express.Router()
 var usermodel=require('../model/users');
+var mongo = require('mongodb');
 router.use(express.json())
 
 router.get('/',(req,res)=>{
     if (!req.isAuthenticated()) { 
         res.redirect('/auth/login');
       }
-    res.render('employee/allusers');
+    usermodel.findUsersByAdmin(req.app.locals.db,req.session.passport.user).then(function(result){
+        res.render('employee/allusers',{result});
+    })
+    
 });
 router.get('/add',(req,res)=>{
     if (!req.isAuthenticated()) { 
@@ -19,84 +23,82 @@ router.post('/add',(req,res)=>{
     if (!req.isAuthenticated()) { 
         res.redirect('/auth/login');
       }
+    // const _id = new mongo.ObjectID(req.session.passport.user);
 
-        const users = req.app.locals.users;
-        const _id = ObjectID(req.session.passport.user);
-        console.log(_id)
-        users.findOne({ _id }, (err, results) => {
-            if (err) {
-                throw err
-                ;
-            }
-        })
-            console.log(users)
     data={
         email:req.body.email,
         name:req.body.name,
         mobileno:req.body.mobileno,
-        isAdmin:false
+        isAdmin:false,
+        adminid:req.session.passport.user
     }
-    console.log(data)
-    usermodel.insertUser(req.app.locals.db,data).then(function(err,result){
-        console.log(result)
+    usermodel.insertUser(req.app.locals.db,data).then(function(err,result){    
+        console.log(result)    
         res.redirect('/users')
     })
-    
 })
 
-router.get('/api/cust/:id',(req,res)=>{
-    let result=cust.find(c=> c.id===parseInt(req.params.id))
-    if(!result) res.status(404).send("not found")
-    res.send(result)
+router.get('/edit/:id',(req,res)=>{
+    if (!req.isAuthenticated()) { 
+        res.redirect('/auth/login');
+    }    
+    const _id = new mongo.ObjectID(req.params.id);
+    usermodel.findUser(req.app.locals.db,_id).then(function(data){
+        res.render('employee/addoredit',{data:data});
+    })
 })
 
-router.post("/api/cust",(req,res)=>{
-    
-    const result1=Joi.validate(req.body,schema);
-    if(result1.error){
-        res.status(404).send(result1.error.details[0].type);
-        return
+router.post('/update',(req,res)=>{
+    if (!req.isAuthenticated()) { 
+        res.redirect('/auth/login');
+      }
+    const _id = new mongo.ObjectID(req.body.userid);
+     
+    data={
+        email:req.body.email,
+        name:req.body.name,
+        mobileno:req.body.mobileno,
+        isAdmin:false,
+        adminid:req.session.passport.user
     }
-
-    if(!req.body.name || req.body.name.length<3){
-        res.status(404).send("invalid name");
-        return;
-    }
-    const cusst={
-        id: cust.length+1,
-        name:req.body.name
-    }
-    cust.push(cusst);
-    res.send(cust)
+    usermodel.updateUser(req.app.locals.db,_id,data).then(function(err,result){    
+        console.log(result)    
+        res.redirect('/users')
+    })
 })
 
-function validatefunc(custname){
-    var schema={
-        name:Joi.string().min(3).required()
-    }
-    return Joi.validate(custname,schema)
-}
-router.put('/api/cust/:id',(req,res)=>{
-    const rr=cust.find(c=> c.id==parseInt(req.params.id));
-    if(!rr){
-        res.send("not foundss");
-        return
-    }
-    const valid=validatefunc(req.body)
-    if(valid.error){
-        res.send("invalid");
-        return;
-    }
-
-rr.name=req.body.name;
-res.send(cust);
+router.get('/delete/:id',(req,res)=>{
+    if (!req.isAuthenticated()) { 
+        res.redirect('/auth/login');
+      }
+    const _id = new mongo.ObjectID(req.params.id);     
+    usermodel.deleteUser(req.app.locals.db,_id).then(function(err,result){            
+        res.redirect('/users')
+    })
 })
 
-router.delete('/api/cust/:id',(req,res)=>{
-    const rr=cust.find(c=> c.id==parseInt(req.params.id));
-    const getindex=cust.indexOf(rr)
-    cust.splice(getindex,1)
-    res.send(cust);
-})
+// router.get('/tasks/:id',(req,res)=>{
+//     if (!req.isAuthenticated()) { 
+//         res.redirect('/auth/login');
+//     }    
+//     const _id = new mongo.ObjectID(req.params.id);
+//     usermodel.findTasks(req.app.locals.db,_id).then(function(data){
+//         res.render('employee/mytasks',{data:data});
+//     })
+// })
 
+router.post('/addtask',(req,res)=>{
+    if (!req.isAuthenticated()) { 
+        res.redirect('/auth/login');
+      }
+    data={
+        taskname:req.body.taskname,
+        description:req.body.description,
+        userid:req.body.userid
+    }
+    usermodel.insertTaskForUser(req.app.locals.db,data).then(function(err,result){    
+        console.log(result)    
+        res.redirect('/users')
+    })
+})
 module.exports=router;

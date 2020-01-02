@@ -1,4 +1,4 @@
-function getAllUsers(db) {
+function checkadmin(db) {
 return new Promise(function(resolve, reject) {
 
 db.collection('users').find({}).toArray(function(err, result) {        
@@ -15,4 +15,4 @@ function insertUser(db,data) {
     
     });
 }
-module.exports={getAllUsers,insertUser}
+module.exports={checkadmin,insertUser}

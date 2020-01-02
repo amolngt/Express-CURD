@@ -30,6 +30,7 @@ const app=express();
 
 var mongojs = require('mongojs');
 app.locals.db = mongojs('localhost/mytestdb');
+
 const users = app.locals.db.collection('users');
 // --------------------------------------------------
 passport.use(new Strategy((username, password, done)=> {
@@ -65,7 +66,12 @@ passport.use(new Strategy((username, password, done)=> {
   app.set('view engine','hbs');
   hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
-
+  hbs.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 === v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
 const bodyparser=require('body-parser');
 app.use(bodyparser.json())
 
@@ -105,7 +111,7 @@ app.use('/users',userscontroller);
 app.use(function(req, res, next) {
     next(createError(404));
   });
-const port=process.env.PORT || 3000;
+const port=process.env.PORT || 5500;
 app.listen(port,()=>{
     console.log(`app listening on port ${port}`)
 });
