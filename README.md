@@ -1,3 +1,3 @@
 # Express-CURD
-install npm<br>
+npm install<br>
 node index.js
