@@ -3,7 +3,8 @@ const router = express.Router();
 const authUtils = require('../utils/auth');
 const passport = require('passport');
 const usermodel= require('../model/users');
-
+const flash = require('connect-flash');
+router.use(flash())
 router.get('/login', (req, res, next) => {
   const messages = req.flash();
 
@@ -30,26 +31,15 @@ router.post('/register', (req, res, next) => {
   };
  
   usermodel.checkAlreadyexists(req.app.locals.db,req.body.username).then(function(result) {
-    if(result.length>0){
-      const messages = "User Already Exits";
-      req.flash('error', 'User account already exists.');
-      res.render('employee/register');
+    if(result.length>0){      
+      req.flash('messages', 'User account already exists.');
+      res.redirect('/auth/register');
     }else{
       usermodel.insertUser(req.app.locals.db,payload).then(function(result) {
         res.redirect('/auth/login');
       })
     }
   });
-// })
-  // users.insertOne(payload, (err) => {
-  //   if (err) {
-  //     req.flash('error', 'User account already exists.');
-  //   } else {
-  //     req.flash('success', 'User account registered successfully.');
-  //   }
-
-  //   res.redirect('/auth/register');
-  // })
 });
 
 router.get('/logout', (req, res, next) => {

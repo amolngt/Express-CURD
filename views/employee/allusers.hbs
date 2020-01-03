@@ -1,7 +1,11 @@
 <div class="col-md-6 col-md-offset-3"> 
-<h1>All Users For Admin Name-</h1>
-<a href="users/add">Add user</a><a style="float:right" href="auth/logout">Logout</a>
-Search: <input type="text" name="search" id="search" value="">
+<h1>All Users</h1>
+<div class="adduser-logoutbox">
+<h4><a href="users/add">Add User (User Table)</a>
+<a class="pull-right" href="auth/logout">Logout</a></h4>
+</div>
+<br>
+Search for Mobile Number (Bulk Table): <input type="text" name="search" id="search" value="">
 {{#if result}}
 <table class="table">
     <thead>
@@ -9,8 +13,8 @@ Search: <input type="text" name="search" id="search" value="">
             <td>Email</td>
             <td>Name</td>
             <td>Mobile No</td>
-            <td>Edit</td>
-            <td>Delete</td>
+            <td class="hidethis">Edit</td>
+            <td class="hidethis">Delete</td>
         </tr>
 
     </thead>
@@ -36,20 +40,24 @@ Search: <input type="text" name="search" id="search" value="">
 <script>
     $('#search').on('keyup', function(e){
       var parameters = { search: $(this).val() };
+      
       $.post('/users/findusers',parameters, function(data){
         $('.tbody').html('');
         final=JSON.parse(data);
+        str="";
         if(final.length>0){
+            $('.hidethis').hide();
             final.forEach((element) => {
-                str="<tr>";
+                str+="<tr>";
                 edit="users/edit/"+element._id;
                 dle="users/delete/"+element._id;
-                str+="<td>"+element.email+"</td><td>"+element.name+"</td><td>"+element.mobileno+"</td><td><a href="+edit+">Edit</a></td><td><a href="+dle+">Delete</a></td>";
+                str+="<td>"+element.email+"</td><td>"+element.name+"</td><td>"+element.mobileno+"</td>";
                 str+="</tr>";
             });
             $('.tbody').html(str);
+        }else{
+            $('.hidethis').show();
         }
       });
-    
   });
 </script>
