@@ -11,6 +11,7 @@ const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 var session = require("express-session");
 const flash = require('connect-flash');
+var MemoryStore = require('memorystore')(session)
 
 var homeconroller=require('./controller/home.js');
 var employeeconroller=require('./controller/employee.js');
@@ -70,7 +71,11 @@ app.use(express.static("public"));
 app.use(bodyparser.urlencoded({
     extended:true
 }));
-app.use(session({resave:true,saveUnInitialized:true,secret: "session secret" }));
+app.use(session({resave:true,cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  secret: 'keyboard cat' }));
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
