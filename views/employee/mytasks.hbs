@@ -1,0 +1,35 @@
+<div class="col-md-6 col-md-offset-3"> 
+<h1>All Users For Admin Name-</h1>
+<a href="users/add">Add user</a><a style="float:right" href="auth/logout">Logout</a>
+{{#if result}}
+<table class="table">
+    <thead>
+        <tr>
+            <td>Email</td>
+            <td>Name</td>
+            <td>Mobile No</td>
+            <td>Edit</td>
+            <td>Delete</td>
+        </tr>
+
+    </thead>
+   <tbody></tbody>
+  
+        {{#each result}}
+        <tr>
+            <td>{{this.email}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.mobileno}}</td>
+            <td><a href="users/edit/{{this._id}}">Edit</a></td>
+           <td><a href="users/delete/{{this._id}}">Delete</a></td>
+           <td><a href="users/tasks/{{this._id}}">Tasks</a></td>
+        </tr>
+        {{/each}}
+        
+   </tbody>
+</table>
+{{else}}
+<h2>No users found</h2>
+{{/if}}
+</div>
+

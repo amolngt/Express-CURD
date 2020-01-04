@@ -1,9 +1,53 @@
-<h3>{{viewtitle}}</h3>
-<h3><a href="/users">all Users</a></h3>
-<form action="/users/add" method="post">
-<input type="hidden" value="{{data._id}}" name="userid">
-    Email<input type="text" name="email" value="{{data.email}}" >
-    name<input type="text" name="name" value="{{data.age}}" >
-    Mobile No<input type="number" name="mobileno" value="{{data.name}}" >
-    <input type="submit" name="submit" value="submit">
+<div class="col-md-6 col-md-offset-3"> 
+<h3><a href="/users">All Users</a></h3>
+{{#if data}}
+<h3>Edit User</h3>
+{{#each data}}
+<form action="/users/update" method="post">
+<input type="hidden" value="{{this._id}}" name="userid">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" name="email" id="email" value="{{this.email}}">
+    </div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{this.name}}">
+    </div>
+    <div class="form-group">
+        <label for="mobileno">Mobile No:</label>
+        <input type="text" class="form-control" name="mobileno" id="mobileno" value="{{this.mobileno}}" onkeypress="return isNumberKey(event)" minlength="10" maxlength="10">
+    </div>
+  
+    <button class="btn btn-primary">Update</button>
 </form>
+{{/each}}
+{{else}}
+<h3>Add User</h3>
+<form action="/users/add" method="post">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" name="email" id="email" value="{{this.email}}">
+    </div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" name="name" id="name" value="{{this.name}}">
+    </div>
+    <div class="form-group">
+        <label for="mobileno">Mobile No:</label>
+        <input type="text" class="form-control" name="mobileno" id="mobileno" value="{{this.mobileno}}" onkeypress="return isNumberKey(event)" minlength="10" maxlength="10">
+    </div>
+  
+    <button class="btn btn-primary">Add</button>
+</form>
+{{/if}}
+
+</div>
+<script>
+  function isNumberKey(e) {
+      var charCode = (e.which) ? e.which : e.keyCode;
+        if (charCode != 46 && charCode > 31 &&
+          (charCode < 48 || charCode > 57)) {
+          return false;
+      }
+    }
+</script>    

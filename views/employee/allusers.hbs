@@ -1,3 +1,63 @@
-<h1>all Users </h1>
-<a href="users/add">Add user</a>
+<div class="col-md-6 col-md-offset-3"> 
+<h1>All Users</h1>
+<div class="adduser-logoutbox">
+<h4><a href="users/add">Add User (User Table)</a>
+<a class="pull-right" href="auth/logout">Logout</a></h4>
+</div>
+<br>
+Search for Mobile Number (Bulk Table): <input type="text" name="search" id="search" value="">
+{{#if result}}
+<table class="table">
+    <thead>
+        <tr>
+            <td>Email</td>
+            <td>Name</td>
+            <td>Mobile No</td>
+            <td class="hidethis">Edit</td>
+            <td class="hidethis">Delete</td>
+        </tr>
 
+    </thead>
+   <tbody class="tbody">
+  
+        {{#each result}}
+        <tr>
+            <td>{{this.email}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.mobileno}}</td>
+            <td><a href="users/edit/{{this._id}}">Edit</a></td>
+           <td><a href="users/delete/{{this._id}}">Delete</a></td>
+           {{!-- <td><a href="users/tasks/{{this._id}}">Tasks</a></td> --}}
+        </tr>
+        {{/each}}
+        
+   </tbody>
+</table>
+{{else}}
+<h2>No users found</h2>
+{{/if}}
+</div>
+<script>
+    $('#search').on('keyup', function(e){
+      var parameters = { search: $(this).val() };
+      
+      $.post('/users/findusers',parameters, function(data){
+        $('.tbody').html('');
+        final=JSON.parse(data);
+        str="";
+        if(final.length>0){
+            $('.hidethis').hide();
+            final.forEach((element) => {
+                str+="<tr>";
+                edit="users/edit/"+element._id;
+                dle="users/delete/"+element._id;
+                str+="<td>"+element.email+"</td><td>"+element.name+"</td><td>"+element.mobileno+"</td>";
+                str+="</tr>";
+            });
+            $('.tbody').html(str);
+        }else{
+            $('.hidethis').show();
+        }
+      });
+  });
+</script>

@@ -1,14 +1,9 @@
 const express=require('express');
 var createError = require('http-errors');
-// require('./model/db');
-// require('./model/employee.model');
 const path=require('path');
 var cookieParser = require('cookie-parser');
 var expresshbs=require('express-handlebars');
 var hbs=require('hbs');
-
-
-
 const authUtils = require('./utils/auth');
 
 //passport starts
@@ -22,10 +17,6 @@ var employeeconroller=require('./controller/employee.js');
 var authcontroller=require('./controller/auth.js')
 var userscontroller=require('./controller/users.js')
 
-
-
-// var mongo = require("express-mongo-db");
-// const MongoClient = require('mongodb').MongoClient;
 const app=express();
 
 var mongojs = require('mongojs');
@@ -65,20 +56,14 @@ passport.use(new Strategy((username, password, done)=> {
   app.set('view engine','hbs');
   hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
-
+  hbs.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 === v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  });
 const bodyparser=require('body-parser');
 app.use(bodyparser.json())
-
-
-// app.use(mongo('mongodb://localhost/mytestdb'));
-
-// app.locals.users = users;
-
-
-
-
-
-    // bodyParser = require("body-parser");
 app.use(cookieParser());
 app.use(express.static("public"));
 // app.use(require('cookie-parser')());
@@ -102,10 +87,11 @@ app.use('/emp',employeeconroller);
 app.use('/users',userscontroller);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    next(createError(404));
-  });
-const port=process.env.PORT || 3000;
+app.use(function(req, res, next){
+  res.status(404);
+  res.send('404: File Not Found');
+});
+const port=process.env.PORT || 5500;
 app.listen(port,()=>{
     console.log(`app listening on port ${port}`)
 });
