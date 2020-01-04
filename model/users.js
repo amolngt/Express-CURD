@@ -26,7 +26,7 @@ function findUser(db,userid) {
 function findUsersByAdmin(db,userid,search) {
     if(typeof search == "string" ){
         return new Promise(function(resolve, reject) {            
-            db.collection('bulktest').find({'mobileno':{ "$regex" : '^'+search , "$options" : "i"}}).limit(100).toArray(function(err,result) {
+            db.collection('users').find({'mobileno':{ "$regex" : '^'+search , "$options" : "i"}}).limit(100).toArray(function(err,result) {
                 resolve(result);        
                 });
             });

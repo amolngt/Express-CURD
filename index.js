@@ -20,7 +20,7 @@ var userscontroller=require('./controller/users.js')
 const app=express();
 
 var mongojs = require('mongojs');
-app.locals.db = mongojs('localhost/mytestdb');
+app.locals.db = mongojs("mongodb+srv://amol:amol@cluster0-0wbxn.mongodb.net/test?retryWrites=true&w=majority");
 const users = app.locals.db.collection('users');
 // --------------------------------------------------
 passport.use(new Strategy((username, password, done)=> {
