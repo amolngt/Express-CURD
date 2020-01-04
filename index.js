@@ -11,7 +11,6 @@ const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 var session = require("express-session");
 const flash = require('connect-flash');
-var MemoryStore = require('memorystore')(session)
 
 var homeconroller=require('./controller/home.js');
 var employeeconroller=require('./controller/employee.js');
@@ -21,7 +20,7 @@ var userscontroller=require('./controller/users.js')
 const app=express();
 
 var mongojs = require('mongojs');
-app.locals.db = mongojs("mongodb+srv://amol:amol@cluster0-0wbxn.mongodb.net/test?retryWrites=true&w=majority");
+app.locals.db = mongojs('localhost/mytestdb');
 const users = app.locals.db.collection('users');
 // --------------------------------------------------
 passport.use(new Strategy((username, password, done)=> {
@@ -71,11 +70,7 @@ app.use(express.static("public"));
 app.use(bodyparser.urlencoded({
     extended:true
 }));
-app.use(session({resave:true,cookie: { maxAge: 86400000 },
-  store: new MemoryStore({
-    checkPeriod: 86400000 // prune expired entries every 24h
-  }),
-  secret: 'keyboard cat' }));
+app.use(session({resave:true,saveUnInitialized:true,secret: "session secret" }));
 // app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
